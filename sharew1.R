@@ -1108,59 +1108,10 @@ plot.lpcah <- function(object, dims = c(1,2), ycol = "darkgreen", xcol = "lights
 colMeans(Y)
 
 
-# estimation
-# testsize = 10000
-# set.seed(123); testidx = sample(nrow(Y), testsize)
-
-#out = lpca(Y[-testidx, ], X[-testidx, ], dcrit = 1e-8) # same convergence criterion as rrvglm
 out = lpca(Y, X, dcrit = 1e-8) # same convergence criterion as rrvglm
 
 q.lpca(out)
 
-# prediction for test set
-# Phat = predict.lpca(out, newX = X[testidx, ])
-
-# predicties met logistische regressie
-# Phat.glm = matrix(NA, nrow(Phat), ncol(Phat))
-# df = as.data.frame(cbind(Y, X[, 1:13]))
-# glmout = glm(Di ~ Austria + Germany + Sweden + Spain + Italy + France + Denmark + Greece + Switzerland + Belgium + Israel + Female + Age, family = binomial, data = df[-testidx, ])
-# Phat.glm[, 1] = predict(glmout, newdata = df[testidx, ], type = "response")
-# glmout = glm(H ~ Austria + Germany + Sweden + Spain + Italy + France + Denmark + Greece + Switzerland + Belgium + Israel + Female + Age, family = binomial, data = df[-testidx, ])
-# Phat.glm[, 2] = predict(glmout, newdata = df[testidx, ], type = "response")
-# glmout = glm(CL ~ Austria + Germany + Sweden + Spain + Italy + France + Denmark + Greece + Switzerland + Belgium + Israel + Female + Age, family = binomial, data = df[-testidx, ])
-# Phat.glm[, 3] = predict(glmout, newdata = df[testidx, ], type = "response")
-# glmout = glm(JD ~ Austria + Germany + Sweden + Spain + Italy + France + Denmark + Greece + Switzerland + Belgium + Israel + Female + Age, family = binomial, data = df[-testidx, ])
-# Phat.glm[, 4] = predict(glmout, newdata = df[testidx, ], type = "response")
-# glmout = glm(An ~ Austria + Germany + Sweden + Spain + Italy + France + Denmark + Greece + Switzerland + Belgium + Israel + Female + Age, family = binomial, data = df[-testidx, ])
-# Phat.glm[, 5] = predict(glmout, newdata = df[testidx, ], type = "response")
-# glmout = glm(S ~ Austria + Germany + Sweden + Spain + Italy + France + Denmark + Greece + Switzerland + Belgium + Israel + Female + Age, family = binomial, data = df[-testidx, ])
-# Phat.glm[, 6] = predict(glmout, newdata = df[testidx, ], type = "response")
-# glmout = glm(De ~ Austria + Germany + Sweden + Spain + Italy + France + Denmark + Greece + Switzerland + Belgium + Israel + Female + Age, family = binomial, data = df[-testidx, ])
-# Phat.glm[, 7] = predict(glmout, newdata = df[testidx, ], type = "response")
-# 
-# -2* colSums(Y[testidx, ] * log(Phat) + (1 - Y[testidx, ]) * log(1 - Phat))
-# -2* colSums(Y[testidx, ] * log(Phat.glm) + (1 - Y[testidx, ]) * log(1 - Phat.glm))
-
-# relationship between odds ratios and angles ????
-OR = matrix(NA, 7,7)
-for(t in 1:6){
-  for(s in (t+1):7){
-    ct  = table(Y[, t], Y[, s])
-    OR[s, t] = OR[t, s] = (ct[1,1] * ct[2,2])/(ct[1,2] * ct[2,1])
-  }
-}
-COS = matrix(NA, 7,7)
-for(t in 1:6){
-  for(s in (t+1):7){
-    COS[s, t] = COS[t, s] = (out$V[t, ] %*% out$V[s, ])/(sqrt(out$V[t, ] %*% out$V[t, ]) * sqrt(out$V[s, ] %*% out$V[s, ]))
-  }
-}
-rownames(OR) = colnames(OR) = colnames(Y)
-rownames(COS) = colnames(COS) = colnames(Y)
-OR
-COS
-
-plot(COS[lower.tri(OR)], log(OR[lower.tri(OR)]), "p")
 
 plt1 = plot.lpca1(out, ocol = country, oshape = gender); 
 plt1 = plot.lpca1(out, oshape = gender); 
